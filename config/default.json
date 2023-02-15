@@ -1,6 +1,7 @@
 {
     "covid-api": {
       "url": "https://covid-19-statistics.p.rapidapi.com",
+      "key": "",
       "host": "covid-19-statistics.p.rapidapi.com"
     }
 }
