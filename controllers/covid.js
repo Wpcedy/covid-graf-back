@@ -1,8 +1,8 @@
-const redis = require('redis');
-const client = redis.createClient();
-client.connect();
+const Redis = require('ioredis');
+const redis = new Redis(process.env.DB_CONNECTION_URL);
+redis.connect();
 
-client.on("error", (error) => {
+redis.on("error", (error) => {
     console.error(error);
 });
 
@@ -11,7 +11,7 @@ const axios = require('axios');
 
 const config = require('config');
 const url = config.get('covid-api.url');
-const key = config.get('covid-api.key');
+const key = process.env.RAPIDAPI_KEY;
 const host = config.get('covid-api.host');
 
 const regions = (req, res, next) => {
@@ -34,7 +34,7 @@ const regions = (req, res, next) => {
 
 const report = async (req, res, next) => {
     var keyRedis = req.query.region_name + '&' + req.query.iso
-    let covidReports = await client.get(`${keyRedis}`);
+    let covidReports = await redis.get(`${keyRedis}`);
     if (!covidReports) {
         axios({
             method: 'get',
@@ -57,7 +57,7 @@ const report = async (req, res, next) => {
                 responseReports.recovered += province.recovered;
                 responseReports.active += province.active;
             });
-            await client.set(`${keyRedis}`, JSON.stringify(responseReports));
+            await redis.set(`${keyRedis}`, JSON.stringify(responseReports), 'EX', 10);
             res.json(responseReports);
         }).catch(err => {
             res.json({ message: 'Error: ' + err.message });
