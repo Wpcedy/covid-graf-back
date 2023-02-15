@@ -1,0 +1,7 @@
+{
+    "covid-api": {
+      "url": "https://covid-19-statistics.p.rapidapi.com",
+      "key": "a3c55a67f0mshfb0ab719f09f0a5p14fab7jsn90f4b4485a2d",
+      "host": "covid-19-statistics.p.rapidapi.com"
+    }
+}
