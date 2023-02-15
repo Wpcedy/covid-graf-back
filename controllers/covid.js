@@ -1,8 +1,8 @@
-const Redis = require('ioredis');
-const redis = new Redis(process.env.DB_CONNECTION_URL);
-redis.connect();
+const redis = require('redis');
+const client = redis.createClient();
+client.connect();
 
-redis.on("error", (error) => {
+client.on("error", (error) => {
     console.error(error);
 });
 
@@ -34,7 +34,7 @@ const regions = (req, res, next) => {
 
 const report = async (req, res, next) => {
     var keyRedis = req.query.region_name + '&' + req.query.iso
-    let covidReports = await redis.get(`${keyRedis}`);
+    let covidReports = await client.get(`${keyRedis}`);
     if (!covidReports) {
         axios({
             method: 'get',
@@ -57,7 +57,7 @@ const report = async (req, res, next) => {
                 responseReports.recovered += province.recovered;
                 responseReports.active += province.active;
             });
-            await redis.set(`${keyRedis}`, JSON.stringify(responseReports), 'EX', 10);
+            await client.set(`${keyRedis}`, JSON.stringify(responseReports));
             res.json(responseReports);
         }).catch(err => {
             res.json({ message: 'Error: ' + err.message });
