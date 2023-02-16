@@ -68,4 +68,3 @@ const report = async (req, res, next) => {
 };
 
 module.exports = { regions, report };
-
