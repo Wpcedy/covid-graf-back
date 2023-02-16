@@ -1,10 +1,10 @@
-const redis = require('redis');
-const client = redis.createClient();
-client.connect();
+// const redis = require('redis');
+// const client = redis.createClient();
+// client.connect();
 
-client.on("error", (error) => {
-    console.error(error);
-});
+// client.on("error", (error) => {
+//     console.error(error);
+// });
 
 const https = require('https');
 const axios = require('axios');
@@ -33,9 +33,9 @@ const regions = (req, res, next) => {
 };
 
 const report = async (req, res, next) => {
-    var keyRedis = req.query.region_name + '&' + req.query.iso
-    let covidReports = await client.get(`${keyRedis}`);
-    if (!covidReports) {
+    // var keyRedis = req.query.region_name + '&' + req.query.iso
+    // let covidReports = await client.get(`${keyRedis}`);
+    // if (!covidReports) {
         axios({
             method: 'get',
             url: url + '/reports?region_name=' + req.query.region_name + '&iso=' + req.query.iso,
@@ -57,14 +57,14 @@ const report = async (req, res, next) => {
                 responseReports.recovered += province.recovered;
                 responseReports.active += province.active;
             });
-            await client.set(`${keyRedis}`, JSON.stringify(responseReports));
+            // await client.set(`${keyRedis}`, JSON.stringify(responseReports));
             res.json(responseReports);
         }).catch(err => {
             res.json({ message: 'Error: ' + err.message });
         });
-    } else {
-        res.json(JSON.parse(covidReports));
-    }
+    // } else {
+    //     res.json(JSON.parse(covidReports));
+    // }
 };
 
 module.exports = { regions, report };

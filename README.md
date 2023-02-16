@@ -6,3 +6,7 @@ Projeto Graficos Covid 19 back - PROCESSO SELETIVO
 
 # Configuração
 - Configurar a key de acesso no rapidapi arquivo `./config/default.json`
+
+# Iniciar serviço
+- `node server.js`
+
